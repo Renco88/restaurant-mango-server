@@ -30,6 +30,7 @@ async function run() {
 
     const menuCollection = client.db("mangoDb").collection("menu");
     const reviewsCollection = client.db("mangoDb").collection("reviews");
+    const cartCollection = client.db("mangoDb").collection("carts");
 
     app.get('/menu',async(req,res)=>{
       const result =await menuCollection.find().toArray();
@@ -39,6 +40,20 @@ async function run() {
       const result =await reviewsCollection.find().toArray();
       res.send(result);
     })
+
+    // carts collection
+    app.get('/carts', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await cartCollection.find(query).toArray();
+      res.send(result);
+    });
+    
+    app.post('/carts', async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollection.insertOne(cartItem);
+      res.send(result);
+    });
 
 
 
